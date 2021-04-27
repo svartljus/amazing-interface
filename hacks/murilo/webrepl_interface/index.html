@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>WebRepl Test</title>
+  </head>
+  <body>
+
+    <form id="form">
+      <div>
+        <label for="ip-address">Ip address:</label>
+        <input id="ip-address" name="ip" type="text">
+        <input type="submit" value="connect">
+      </div>
+    </form>
+
+    <div id="controls" style="display: none">
+      <button onclick="fillRed()">Red</button>
+      <button onclick="fillBlue()">Blue</button>
+      <button onclick="fillGreen()">Green</button>
+    </div>
+
+    <script type="text/javascript" src="webrepl.js"></script>
+    <script type="text/javascript">
+      let repl
+      const initCode = `import machine, neopixel
+from time import sleep, ticks_us
+
+n_leds = 16 * 8 # pixel kit
+np = neopixel.NeoPixel(machine.Pin(4), n_leds)
+`
+      function fillRed() {
+        if (!repl) return
+        repl.exec('np.fill((20, 0, 0));np.write()')
+      }
+      function fillBlue() {
+        if (!repl) return
+        repl.exec('np.fill((0, 0, 20));np.write()')
+      }
+      function fillGreen() {
+        if (!repl) return
+        repl.exec('np.fill((0, 20, 0));np.write()')
+      }
+      window.onload = function() {
+        const form = document.querySelector('#form')
+        const controls = document.querySelector('#controls')
+        form.addEventListener('submit', function(e) {
+          e.preventDefault()
+          repl = new WebREPL.WebREPL({
+            ip: e.target.ip.value,
+            password: 'becoming',
+            autoConnect: false,
+            autoAuth: true,
+            timeout: 5000
+          })
+          repl.on('authenticated', function() {
+            repl.execFromString(initCode)
+            controls.style.display = 'block'
+          })
+          repl.connect()
+          return false
+        })
+      }
+    </script>
+  </body>
+</html>
