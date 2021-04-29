@@ -1,5 +1,5 @@
 :root {
-	--aside: 3rem;
+	--aside: 40px;
 	--grid-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	--grid-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	--color: orange;
