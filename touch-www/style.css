@@ -117,7 +117,7 @@ input[type='range'] {
 	background-color: var(--color);
 }
 
-.faderh input[type='range'] {
+.faderv input[type='range'] {
 	-webkit-appearance: slider-vertical;
 }
 
