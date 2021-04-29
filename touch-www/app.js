@@ -2,7 +2,7 @@ const LAYOUT = {};
 LAYOUT.grid = 20;
 
 window.addEventListener('load', () => {
-	loadFile('vizpad.xml');
+	loadFile('index.xml');
 });
 
 /* load XML */
