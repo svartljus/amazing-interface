@@ -39,7 +39,7 @@ main {
 main > * {
 	position: absolute;
 	width: 100%;
-	padding: 1rem;
+	/* padding: 1rem; */
 	height: 100%;
 	box-sizing: border-box;
 }
@@ -68,9 +68,8 @@ div {
 	text-align: center;
 	border: 1px solid var(--color);
 	box-sizing: border-box;
-	padding: 0.5rem;
+	padding: 2px;
 	background-color: transparent;
-	border-radius: 0.5rem;
 	text-transform: uppercase;
 }
 
@@ -88,19 +87,21 @@ aside {
 	height: var(--aside);
 	line-height: var(--aside);
 	box-sizing: border-box;
-	background-color: rgb(0, 0, 0, 0.2);
-	display: grid;
-	grid-template-columns: 1fr 1fr;
+	column-count: var(--count);
 	text-align: center;
+	cursor: pointer;
 }
 
 aside > * {
-	cursor: pointer;
 	display: block;
 }
 
 aside > *:not(.active) {
-	opacity: 0.2;
+	background-color: rgb(0, 0, 0, 0.2);
+}
+
+aside > *.active {
+	background-color: transparent;
 }
 
 /* components */
@@ -116,10 +117,19 @@ input[type='range'] {
 	background-color: var(--color);
 }
 
-input[type='range']::-webkit-slider-thumb {
-	width: 10px;
-	-webkit-appearance: none;
-	height: 10px;
-	cursor: ew-resize;
-	box-shadow: -80px 0 0 80px white;
+.faderh input[type='range'] {
+	-webkit-appearance: slider-vertical;
+}
+
+.led {
+	border: 0;
+	background-color: var(--color);
+	opacity: 0.2;
+	border-radius: 50%;
+}
+
+.labelv,
+.labelh {
+	display: none;
+	pointer-events: none;
 }
