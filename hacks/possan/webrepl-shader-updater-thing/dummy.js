@@ -6,7 +6,7 @@ const connect = () => {
     console.log('connect')
 
     repl = new WebREPL({
-        ip: '192.168.1.149',
+        ip: '192.168.10.235',
         password: 'repl',
         autoConnect: true,
         autoAuth: true,
@@ -30,7 +30,7 @@ const sliderChanged = e => {
     console.log('slider changed', e, e.target)
     const k = e.target.dataset['var']
     const v = e.target.value
-    const code = `${k}=${v}`
+    const code = `runner.${k}=${v}`
     console.log('execute code', code)
     repl.execFromString(code)
         .then(() => console.log('code executed'))
@@ -38,24 +38,29 @@ const sliderChanged = e => {
 
 const sliderMoved = e => {
     // console.log('slider moved', e)
+}
 
+const loadShaderCode = () => {
+    console.log('fetch shader code')
+    repl.loadFile('shader.py')
+        .then(buffer => {
+            const code = new TextDecoder("utf-8").decode(buffer);
+            console.log('loaded file', buffer, code)
+            document.getElementById('shadercode').value = code
+        })
 }
 
 const sendShaderCode = () => {
     console.log('send shader code')
     const code = document.getElementById('shadercode').value
-    repl.enterRawRepl()
-        .then(() => repl.execRaw(code, 30))
-        .then(() => repl.exitRawRepl(code))
-
-}
-
-const sendBootstrapCode = () => {
-    console.log('send bootstrap code')
-    const code = document.getElementById('bootstrapcode').value
-    repl.enterRawRepl()
-        .then(() => repl.execRaw(code, 30))
-        .then(() => repl.exitRawRepl(code))
+    const buffer = new TextEncoder("utf-8").encode(code);
+    repl.sendFile('shader.py', buffer)
+        .then(() => {
+            repl.softReset()
+            setTimeout(() => {
+                repl.connect()
+            }, 2000)
+        })
 }
 
 const sendReplCode = () => {
@@ -77,9 +82,9 @@ window.addEventListener('load', () => {
     document.getElementById('r4').addEventListener('change', sliderChanged)
     document.getElementById('r4').addEventListener('mousemove', sliderMoved)
 
-    document.getElementById('sendshader').addEventListener('click', sendShaderCode)
-    document.getElementById('sendbootstrap').addEventListener('click', sendBootstrapCode)
     document.getElementById('sendrepl').addEventListener('click', sendReplCode)
+    document.getElementById('sendshader').addEventListener('click', sendShaderCode)
+    document.getElementById('loadshader').addEventListener('click', loadShaderCode)
 
     connect()
 })

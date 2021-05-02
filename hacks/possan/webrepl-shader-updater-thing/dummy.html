@@ -18,22 +18,22 @@
 
     <p>
       Slider 1
-      <input type="range" id="r1" data-var="v1" min="0" max="100" />
+      <input type="range" id="r1" data-var="v1" min="0" max="255" />
     </p>
 
     <p>
       Slider 2
-      <input type="range" id="r2" data-var="v2"  min="0" max="100" />
+      <input type="range" id="r2" data-var="v2"  min="0" max="255" />
     </p>
 
     <p>
       Slider 3
-      <input type="range" id="r3" data-var="v3" min="0" max="100" />
+      <input type="range" id="r3" data-var="v3" min="0" max="255" />
     </p>
 
     <p>
       Slider 4
-      <input type="range" id="r4" min="0" max="100" />
+      <input type="range" id="r4" data-var="v4" min="0" max="255" />
     </p>
 
     <p>
@@ -45,62 +45,19 @@
     <p>
       "Shader" code<br />
 
-      <textarea id="shadercode" rows="10" cols="40">
-def shader(i, t):
-  np[i] = (
-    int(v1 + v1 * sin(4.0 * t)),
-    int(v2 + v2 * cos(3.7 * t)),
-    int(v3 + v3 * sin(4.7 * t)))
+      <textarea id="shadercode" rows="20" cols="80">
+from math import sin, cos
+
+def shader(pixelarray, i, t, pct, v1, v2, v3, v4):
+  rt = t + pct * 5
+  pixelarray[i] = (
+    int(v1 + v1 * sin(14.0 * t)),
+    int(v2 + v2 * cos(17.7 * t)),
+    int(v3 + v3 * sin(16.0 * t)))
 </textarea
       ><br />
       <button id="sendshader">INSTALL SHADER</button>
-    </p>
-
-    <p>
-      Bootstrap<br />
-
-      <textarea id="bootstrapcode" rows="10" cols="40">
-import machine, neopixel
-from _thread import start_new_thread
-from time import sleep, ticks_us
-from math import sin, cos, radians
-
-n_leds = 16
-v0 = 100
-v1 = 20
-v2 = 0
-v3 = 0
-
-np = neopixel.NeoPixel(machine.Pin(19), n_leds)
-np[0] = (255, 0, 0)
-np[1] = (0, 128, 0)
-np[2] = (0, 0, 64)
-np[3] = (0, 0, 0)
-np[4] = (0, 0, 0)
-np.write()
-
-def shader(i, t):
-  np[i] = (
-    int(v1 + v1 * sin(4.0 * t)),
-    int(v2 + v2 * cos(3.7 * t)),
-    int(v3 + v3 * sin(4.7 * t)))
-
-def step():
-  time = ticks_us()
-  for x in range(0, n_leds):
-    shader(x, time / 2000000 + x / n_leds)
-  np.write()
-
-def thread1():
-  while True:
-    step()
-    time.sleep_ms(60)
-
-start_new_thread(thread1, ())
-
-</textarea
-      ><br />
-      <button id="sendbootstrap">RUN BOOTSTRAP CODE</button>
+      <button id="loadshader">FETCH SHADER</button>
     </p>
   </body>
 </html>
