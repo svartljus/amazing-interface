@@ -23,7 +23,6 @@ function loadFile(url, callback) {
 		drawInterface(data);
 
 		window.onload = setSize();
-		// window.onresize = setSize();
 	};
 	xhr.open('GET', url, true);
 	xhr.send(null);
@@ -50,15 +49,12 @@ function tidy(data) {
 		for (let control of page.control) {
 			control.attr = control._attributes;
 			control.attr.name = atob(control.attr.name);
+			control.attr.addr = `/${page.attr.name}/${control.attr.name}`;
 			delete control._attributes;
 			for (const [key, value] of Object.entries(control.attr)) {
 				if (value === 'false') control.attr[key] = false;
 				if (value === 'true') control.attr[key] = true;
 			}
-			// for (let attr of control.attr) {
-			// 	if (attr === 'false') attr = false;
-			// 	if (attr === 'true') attr = true;
-			// }
 		}
 	}
 }
@@ -95,13 +91,7 @@ function drawInterface(data) {
 		sectionHandler.addEventListener('click', () => {});
 
 		for (let control of page.control) {
-			let div = document.createElement('div');
-			div.classList.add(control.attr.type);
-			div.id = control.attr.name;
-			// div.setAttribute('data-x', attr.x);
-			// div.setAttribute('data-y', attr.y);
-			// div.setAttribute('data-w', attr.w);
-			// div.setAttribute('data-h', attr.h);
+			const div = $('div', control.attr.type, control.attr.name);
 			div.style.setProperty(
 				'--x',
 				Math.ceil(control.attr.x / LAYOUT.grid + 1) || 1
@@ -124,19 +114,26 @@ function drawInterface(data) {
 				case 'push':
 					el = document.createElement('input');
 					el.type = 'button';
+					el.onclick = () => {
+						send({
+							address: control.attr.addr,
+							args: new Array({
+								type: 'f',
+								value: 1.0,
+							}),
+						});
+					};
 					break;
 				case 'toggle':
 					el = document.createElement('input');
 					el.type = 'checkbox';
+					el.onclick = () => {
+						send(getDataObject(control.attr.addr, 'f', el.value));
+					};
 					break;
 				case 'labelv':
 				case 'labelh':
-					el = document.createElement('label');
-					el.textContent = atob(control.attr.text);
-					break;
-				case 'led':
-					break;
-				case 'encoder':
+					div.textContent = atob(control.attr.text);
 					break;
 				case 'faderh':
 				case 'faderv':
@@ -151,39 +148,12 @@ function drawInterface(data) {
 					if (control.attr.centered) {
 						el.value = Math.abs(el.min - el.max) / 2;
 					}
+					el.addEventListener('change', () => {
+						send(getDataObject(control.attr.addr, 'f', el.value / 10000));
+					});
 					break;
-				case 'rotaryh':
-				case 'rotaryv':
-					break;
-				case 'xy':
-					break;
-				// case 'range':
-				// 	el = document.createElement('input');
-				// 	el.type = control.type;
-				// 	el.min = control?.data?.min || 0;
-				// 	el.max = control?.data?.max || 100;
-				// 	el.classList.add(control?.data?.orientation);
-				// 	break;
-				// case 'label':
-				// 	el = document.createElement('span');
-				// 	el.textContent = control?.data?.value || '';
-				// 	break;
 			}
-			if (el !== null) {
-				div.appendChild(el);
-				el.addEventListener('change', () => {
-					var dataObject = {
-						address: `/${page.attr.name}/${control.attr.name}`,
-						args: new Array({
-							type: 'f',
-							value: el.value / 10000,
-						}),
-					};
-					console.log(dataObject);
-					dataObject = JSON.stringify(dataObject);
-					ws.send(dataObject);
-				});
-			}
+			if (el !== null) div.appendChild(el);
 			section.appendChild(div);
 		}
 	}
@@ -191,23 +161,32 @@ function drawInterface(data) {
 	main.childNodes[0].classList.add('show');
 }
 
+function getDataObject(addr, type, val) {
+	return {
+		address: addr,
+		args: new Array({
+			type: type,
+			value: val,
+		}),
+	};
+}
+
+function send(data) {
+	console.log(data);
+	data = JSON.stringify(data);
+	ws.send(data);
+}
+
 function setSize() {
-	// const size = `${100 / (LAYOUT.w / LAYOUT.grid)}vw`;
-	// const size = '1fr';
-	// let rowData = '';
-
-	// for (let i = 0; i < LAYOUT.rows; i++) {
-	// 	rowData += ` ${size}`;
-	// }
-
-	// let colData = '';
-	// for (let i = 0; i < LAYOUT.cols; i++) {
-	// 	colData += ` ${size}`;
-	// }
-
 	const rowData = `repeat(${LAYOUT.rows}, calc(100% / ${LAYOUT.rows}))`;
 	const colData = `repeat(${LAYOUT.cols}, calc(100% / ${LAYOUT.cols}))`;
-
 	document.body.style.setProperty('--grid-rows', rowData);
 	document.body.style.setProperty('--grid-columns', colData);
+}
+
+function $(type = 'div', className, id) {
+	const el = document.createElement(type);
+	el.className = className;
+	el.id = id;
+	return el;
 }
