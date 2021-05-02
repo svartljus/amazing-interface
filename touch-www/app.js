@@ -92,22 +92,10 @@ function drawInterface(data) {
 
 		for (let control of page.control) {
 			const div = $('div', control.attr.type, control.attr.name);
-			div.style.setProperty(
-				'--x',
-				Math.ceil(control.attr.x / LAYOUT.grid + 1) || 1
-			);
-			div.style.setProperty(
-				'--y',
-				Math.ceil(control.attr.y / LAYOUT.grid + 1) || 1
-			);
-			div.style.setProperty(
-				'--w',
-				Math.ceil(control.attr.w / LAYOUT.grid) || 1
-			);
-			div.style.setProperty(
-				'--h',
-				Math.ceil(control.attr.h / LAYOUT.grid) || 1
-			);
+			div.style.setProperty('--x', Math.ceil(control.attr.x / LAYOUT.grid + 1));
+			div.style.setProperty('--y', Math.ceil(control.attr.y / LAYOUT.grid + 1));
+			div.style.setProperty('--w', Math.ceil(control.attr.w / LAYOUT.grid));
+			div.style.setProperty('--h', Math.ceil(control.attr.h / LAYOUT.grid));
 			div.style.setProperty('--color', `var(--${control.attr.color})`);
 			let el = null;
 			switch (control.attr.type) {
