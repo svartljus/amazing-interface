@@ -5,6 +5,15 @@
 	--color: orange;
 	--color2: #2f2f2f;
 	--color3: #3f3f3f;
+	--red: #ff0000;
+	--green: #4fd000;
+	--blue: #00c8a7;
+	--yellow: #ffef00;
+	--purple: #b27cad;
+	--gray: #b2b2b2;
+	--orange: #ff9c00;
+	--brown: #876542;
+	--pink: #ff00fa;
 }
 * {
 	margin: 0;
@@ -12,10 +21,11 @@
 }
 
 body {
-	background-color: #2a2a2a;
+	background-color: #000;
 	color: white;
 	box-sizing: border-box;
-	/* overflow: hidden; */
+	font-family: sans-serif;
+	overflow: hidden;
 }
 
 /* main, aside */
@@ -70,7 +80,8 @@ div {
 	box-sizing: border-box;
 	padding: 2px;
 	background-color: transparent;
-	text-transform: uppercase;
+	/* text-transform: uppercase; */
+	border-radius: 6px;
 }
 
 div > * {
@@ -97,11 +108,11 @@ aside > * {
 }
 
 aside > *:not(.active) {
-	background-color: rgb(0, 0, 0, 0.2);
+	background-color: rgb(128, 128, 128, 0.2);
 }
 
 aside > *.active {
-	background-color: transparent;
+	background-color: rgb(128, 128, 128, 0.6);
 }
 
 /* components */
@@ -130,6 +141,9 @@ input[type='range'] {
 
 .labelv,
 .labelh {
-	display: none;
+	/* display: none; */
 	pointer-events: none;
+	border: 0;
+	color: var(--color);
+	background-color: transparent;
 }
