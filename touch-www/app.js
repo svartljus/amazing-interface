@@ -139,6 +139,13 @@ function drawInterface(data) {
 					el.addEventListener('change', () => {
 						send(getDataObject(control.attr.addr, 'f', el.value / 10000));
 					});
+					// if (control.attr.type === 'faderv') {
+					// 	const sy =
+					// 		(LAYOUT.rows / LAYOUT.cols) * (control.attr.w / control.attr.h);
+					// 	const sx =
+					// 		(LAYOUT.cols / LAYOUT.rows) * (control.attr.h / control.attr.w);
+					// 	el.style.transform = `rotate(-90deg) scale(${sx}, ${sy})`;
+					// }
 					break;
 			}
 			if (el !== null) div.appendChild(el);
@@ -147,6 +154,16 @@ function drawInterface(data) {
 	}
 	aside.childNodes[0].classList.add('active');
 	main.childNodes[0].classList.add('show');
+
+	const grid = document.createElement('section');
+	grid.id = 'grid';
+	for (let x = 0; x < LAYOUT.rows; x++) {
+		for (let y = 0; y < LAYOUT.cols; y++) {
+			const cell = document.createElement('div');
+			grid.appendChild(cell);
+		}
+	}
+	main.appendChild(grid);
 }
 
 function getDataObject(addr, type, val) {
