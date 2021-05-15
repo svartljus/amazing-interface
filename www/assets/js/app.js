@@ -2,11 +2,48 @@ const LAYOUT = {};
 LAYOUT.grid = 20;
 
 window.addEventListener('load', () => {
-	loadFile('assets/touch/index.xml');
+	loadZipFile('assets/touch/sample.touchosc');
 });
 
-/* load XML */
+function parseXml(xmlStr) {
+	console.log('parsing xml', xmlStr)
+	data = xml2js(xmlStr, { compact: true, spaces: 4 });
+	tidy(data);
+	console.log('parsed json', data);
+	drawInterface(data);
+	window.onload = setSize();
+}
 
+function loadZipFile(url) {
+	fetch(url)
+		.then(r => r.arrayBuffer())
+		.then(buffer => {
+			const bytebuffer = new Uint8Array(buffer)
+			const unzipper = new fflate.Unzip()
+			unzipper.register(fflate.UnzipInflate);
+			unzipper.onfile = file => {
+				console.log('unzipper found a file', file)
+				if (file.name === 'index.xml') {
+					let xmlbytes = new Uint8Array()
+					file.ondata = (err, data, final) => {
+						let newxmlbytes = new Uint8Array( xmlbytes.length + data.length )
+						newxmlbytes.set(xmlbytes, 0)
+						newxmlbytes.set(data, xmlbytes.length)
+						xmlbytes = newxmlbytes
+						if (final) {
+							const td = new TextDecoder()
+							const xmltext = td.decode(xmlbytes)
+							parseXml(xmltext)
+						}
+					}
+					file.start()
+				}
+			}
+			unzipper.push(bytebuffer, true)
+		})
+}
+
+/* load XML */
 function loadFile(url, callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.arguments = Array.prototype.slice.call(arguments, 2);
@@ -14,15 +51,7 @@ function loadFile(url, callback) {
 		const serializer = new XMLSerializer();
 		const dom = xhr.responseXML.documentElement;
 		const xmlStr = serializer.serializeToString(dom);
-		data = xml2js(xmlStr, { compact: true, spaces: 4 });
-
-		tidy(data);
-
-		console.log(data);
-
-		drawInterface(data);
-
-		window.onload = setSize();
+		parseXml(xmlStr)
 	};
 	xhr.open('GET', url, true);
 	xhr.send(null);
