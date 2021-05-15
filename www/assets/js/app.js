@@ -2,7 +2,7 @@ const LAYOUT = {};
 LAYOUT.grid = 20;
 
 window.addEventListener('load', () => {
-	loadZipFile('assets/touch/sample.touchosc');
+	loadZipFile('assets/touch/rotarytest.touchosc');
 });
 
 function parseXml(xmlStr) {
@@ -154,6 +154,24 @@ function drawInterface(data) {
 				case 'labelv':
 				case 'labelh':
 					div.textContent = atob(control.attr.text);
+					break;
+				case 'rotaryh':
+				case 'rotaryv':
+					el = document.createElement('x-rotary');
+					el.min = !control.attr.inverted
+						? parseInt(control.attr.scalef) * fscale
+						: parseInt(control.attr.scalet) * fscale;
+					el.max = !control.attr.inverted
+						? parseInt(control.attr.scalet) * fscale
+						: parseInt(control.attr.scalef) * fscale;
+					if (control.attr.centered) {
+						el.value = Math.abs(el.min - el.max) / 2;
+					}
+					el.addEventListener('change', () => {
+						let val = el.value / fscale;
+						div.style.setProperty('--val', val);
+						send(getDataObject(control.attr.addr, 'f', val));
+					});
 					break;
 				case 'faderh':
 				case 'faderv':
