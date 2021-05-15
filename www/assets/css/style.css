@@ -49,9 +49,8 @@ aside {
 
 main {
 	position: absolute;
-	top: var(--aside);
 	width: 100%;
-	height: calc(100vh - var(--aside));
+	height: 100%;
 	/* background-color: white; */
 }
 
@@ -124,4 +123,15 @@ aside > *:not(.active) {
 
 aside > *.active {
 	background-color: rgb(128, 128, 128, 0.6);
+}
+
+/* multi-page */
+
+body.multi-page main {
+	height: calc(100vh - var(--aside));
+	top: var(--aside);
+}
+
+body:not(.multi-page) aside {
+	display: none;
 }

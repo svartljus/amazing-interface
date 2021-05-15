@@ -71,6 +71,8 @@ function drawInterface(data) {
 	LAYOUT.cols = Math.ceil(LAYOUT.w / LAYOUT.grid);
 	LAYOUT.rows = Math.ceil(LAYOUT.h / LAYOUT.grid);
 
+	if (data.layout.tabpage.length !== 1)
+		document.body.classList.add('multi-page');
 	document.body.style.setProperty('--count', data.layout.tabpage.length);
 
 	for (let page of data.layout.tabpage) {
