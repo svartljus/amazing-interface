@@ -1,3 +1,9 @@
+@import url('button.css');
+@import url('grid.css');
+@import url('led.css');
+@import url('fader.css');
+@import url('label.css');
+
 :root {
 	--aside: 40px;
 	--grid-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -11,6 +17,7 @@
 	--yellow: #ffef00;
 	--purple: #b27cad;
 	--gray: #b2b2b2;
+	--dark-gray: #3f3f3f;
 	--orange: #ff9c00;
 	--brown: #876542;
 	--pink: #ff00fa;
@@ -71,6 +78,7 @@ section {
 }
 
 main div {
+	position: relative;
 	display: grid;
 	/* grid-row: var(--x); */
 	/* grid-column: var(--y); */
@@ -90,7 +98,7 @@ main div {
 main div > * {
 	width: 100%;
 	height: 100%;
-	background-color: #3f3f3f;
+	background-color: var(--dark-gray);
 }
 
 /* aside */
@@ -116,74 +124,4 @@ aside > *:not(.active) {
 
 aside > *.active {
 	background-color: rgb(128, 128, 128, 0.6);
-}
-
-/* components */
-
-input[type='button'] {
-	-webkit-appearance: none;
-}
-
-.led {
-	border: 0;
-	background-color: var(--color);
-	opacity: 0.2;
-	border-radius: 50%;
-}
-
-.labelv,
-.labelh {
-	/* display: none; */
-	pointer-events: none;
-	border: 0;
-	color: var(--color);
-	background-color: transparent;
-	justify-content: center;
-	align-items: center;
-	display: flex;
-}
-
-.labelv label,
-.labelh label {
-	justify-content: center;
-	align-items: center;
-	display: flex;
-}
-
-input[type='range'] {
-	margin: auto;
-	-webkit-appearance: none;
-	position: relative;
-	overflow: hidden;
-	height: 100%;
-	width: 100%;
-	cursor: pointer;
-}
-
-.faderv input[type='range'] {
-	-webkit-appearance: none;
-	/* transform: rotate(90deg); */
-}
-
-::-webkit-slider-runnable-track {
-	background: var(--color);
-}
-
-::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	width: 0;
-	/* background: white; */
-	box-shadow: -100vw 0 0 100vw var(--color);
-	opacity: 0.8;
-}
-
-/* grid */
-
-#grid {
-	z-index: -1;
-	display: grid;
-}
-
-#grid div {
-	border: 1px solid rgba(255, 255, 255, 0.2);
 }

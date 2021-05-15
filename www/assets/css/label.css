@@ -1,0 +1,18 @@
+.labelv,
+.labelh {
+	/* display: none; */
+	pointer-events: none;
+	border: 0;
+	color: var(--color);
+	background-color: transparent;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+}
+
+.labelv label,
+.labelh label {
+	justify-content: center;
+	align-items: center;
+	display: flex;
+}

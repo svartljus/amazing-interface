@@ -2,7 +2,7 @@ const LAYOUT = {};
 LAYOUT.grid = 20;
 
 window.addEventListener('load', () => {
-	loadFile('index.xml');
+	loadFile('assets/touch/index.xml');
 });
 
 /* load XML */
@@ -62,6 +62,7 @@ function tidy(data) {
 function drawInterface(data) {
 	const aside = document.createElement('aside');
 	const main = document.createElement('main');
+	const fscale = 10000;
 	document.body.appendChild(aside);
 	document.body.appendChild(main);
 	LAYOUT.w = data.layout.attr.w || 960;
@@ -128,16 +129,18 @@ function drawInterface(data) {
 					el = document.createElement('input');
 					el.type = 'range';
 					el.min = !control.attr.inverted
-						? parseInt(control.attr.scalef) * 10000
-						: parseInt(control.attr.scalet) * 10000;
+						? parseInt(control.attr.scalef) * fscale
+						: parseInt(control.attr.scalet) * fscale;
 					el.max = !control.attr.inverted
-						? parseInt(control.attr.scalet) * 10000
-						: parseInt(control.attr.scalef) * 10000;
+						? parseInt(control.attr.scalet) * fscale
+						: parseInt(control.attr.scalef) * fscale;
 					if (control.attr.centered) {
 						el.value = Math.abs(el.min - el.max) / 2;
 					}
-					el.addEventListener('change', () => {
-						send(getDataObject(control.attr.addr, 'f', el.value / 10000));
+					el.addEventListener('input', () => {
+						let val = el.value / fscale;
+						div.style.setProperty('--val', val);
+						send(getDataObject(control.attr.addr, 'f', val));
 					});
 					// if (control.attr.type === 'faderv') {
 					// 	const sy =

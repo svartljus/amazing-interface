@@ -1,0 +1,8 @@
+#grid {
+	z-index: -1;
+	display: grid;
+}
+
+#grid div {
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
