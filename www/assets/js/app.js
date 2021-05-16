@@ -6,7 +6,7 @@ window.addEventListener('load', () => {
 });
 
 function parseXml(xmlStr) {
-	console.log('parsing xml', xmlStr)
+	console.log('parsing xml', xmlStr);
 	data = xml2js(xmlStr, { compact: true, spaces: 4 });
 	tidy(data);
 	console.log('parsed json', data);
@@ -16,31 +16,31 @@ function parseXml(xmlStr) {
 
 function loadZipFile(url) {
 	fetch(url)
-		.then(r => r.arrayBuffer())
-		.then(buffer => {
-			const bytebuffer = new Uint8Array(buffer)
-			const unzipper = new fflate.Unzip()
+		.then((r) => r.arrayBuffer())
+		.then((buffer) => {
+			const bytebuffer = new Uint8Array(buffer);
+			const unzipper = new fflate.Unzip();
 			unzipper.register(fflate.UnzipInflate);
-			unzipper.onfile = file => {
-				console.log('unzipper found a file', file)
+			unzipper.onfile = (file) => {
+				console.log('unzipper found a file', file);
 				if (file.name === 'index.xml') {
-					let xmlbytes = new Uint8Array()
+					let xmlbytes = new Uint8Array();
 					file.ondata = (err, data, final) => {
-						let newxmlbytes = new Uint8Array( xmlbytes.length + data.length )
-						newxmlbytes.set(xmlbytes, 0)
-						newxmlbytes.set(data, xmlbytes.length)
-						xmlbytes = newxmlbytes
+						let newxmlbytes = new Uint8Array(xmlbytes.length + data.length);
+						newxmlbytes.set(xmlbytes, 0);
+						newxmlbytes.set(data, xmlbytes.length);
+						xmlbytes = newxmlbytes;
 						if (final) {
-							const td = new TextDecoder()
-							const xmltext = td.decode(xmlbytes)
-							parseXml(xmltext)
+							const td = new TextDecoder();
+							const xmltext = td.decode(xmlbytes);
+							parseXml(xmltext);
 						}
-					}
-					file.start()
+					};
+					file.start();
 				}
-			}
-			unzipper.push(bytebuffer, true)
-		})
+			};
+			unzipper.push(bytebuffer, true);
+		});
 }
 
 /* load XML */
@@ -51,7 +51,7 @@ function loadFile(url, callback) {
 		const serializer = new XMLSerializer();
 		const dom = xhr.responseXML.documentElement;
 		const xmlStr = serializer.serializeToString(dom);
-		parseXml(xmlStr)
+		parseXml(xmlStr);
 	};
 	xhr.open('GET', url, true);
 	xhr.send(null);
@@ -189,6 +189,8 @@ function drawInterface(data) {
 					el.addEventListener('input', () => {
 						let val = el.value / fscale;
 						div.style.setProperty('--val', val);
+					});
+					el.addEventListener('change', () => {
 						send(getDataObject(control.attr.addr, 'f', val));
 					});
 					// if (control.attr.type === 'faderv') {
